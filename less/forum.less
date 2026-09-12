@@ -1,0 +1,35 @@
+// The shading sits INSIDE the scrubber's track, behind the handle and behind
+// the unread marker — the reader is dragging a control, not a picture, and
+// nothing here may ever be the thing under the cursor.
+.Scrubber-scrollbar {
+  position: relative;
+}
+
+.Ridge-track {
+  // 🚨 A strip at the edge, not a wash behind the whole track.
+  //
+  // Full-width shading read well in a dark theme and put a coloured gradient
+  // directly under the handle's own label — "1 of 30 posts" — which is a
+  // legibility gamble in every theme I cannot see. At the edge it never sits
+  // under text, and it still reads as what it is: the elevation profile of the
+  // thread, beside the control that moves through it.
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: 0;
+  width: 7px;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+// Core's own parts of the scrubber have no stacking context of their own, so
+// they are lifted above the shading explicitly rather than by luck of source
+// order.
+.Scrubber-before,
+.Scrubber-handle,
+.Scrubber-after,
+.Scrubber-unread {
+  position: relative;
+  z-index: 1;
+}
