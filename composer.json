@@ -27,7 +27,12 @@
     "extra": {
         "flarum-extension": {
             "title": "Ridge",
-            "category": "feature"
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-mountain",
+                "backgroundColor": "#15803d",
+                "color": "#fff"
+            }
         }
     }
 }
