@@ -56,6 +56,10 @@ discussion list to draw nothing.
 composer require ernestdefoe/ridge
 ```
 
+## Discuss
+
+Questions, ideas and release notes: [Ridge on discuss.flarum.org](https://discuss.flarum.org/d/39849-ridge-a-long-thread-shows-its-own-high-ground-built-using-ai).
+
 ## Licence
 
 MIT
