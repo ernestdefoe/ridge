@@ -108,10 +108,13 @@ class Heat
 
         $peaks = [];
 
+        // fof/best-answer's column; absent when that extension isn't installed.
+        $answer = (int) $discussion->getAttribute('best_answer_post_id');
+
         foreach ($numbers as $id => $number) {
             $value = $scores[$id] / $peak;
 
-            if ($discussion->best_answer_post_id && (int) $discussion->best_answer_post_id === (int) $id) {
+            if ($answer && $answer === (int) $id) {
                 $value = max($value, self::ANSWER_FLOOR);
             }
 
