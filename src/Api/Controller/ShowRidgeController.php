@@ -22,7 +22,9 @@ use Tobyz\JsonApiServer\Exception\NotFoundException;
  */
 class ShowRidgeController implements RequestHandlerInterface
 {
-    public function __construct(private Heat $heat) {}
+    public function __construct(private Heat $heat)
+    {
+    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

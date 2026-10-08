@@ -39,7 +39,8 @@ class Heat
     public function __construct(
         private ConnectionInterface $db,
         private SettingsRepositoryInterface $settings
-    ) {}
+    ) {
+    }
 
     public function for(Discussion $discussion, User $actor): array
     {
