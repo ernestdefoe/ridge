@@ -78,7 +78,11 @@ function parseColour(value) {
   const rgb = value.match(/rgba?\(([^)]+)\)/i);
 
   if (rgb) {
-    const parts = rgb[1].split(/[\s,/]+/).filter(Boolean).slice(0, 3).map(Number);
+    const parts = rgb[1]
+      .split(/[\s,/]+/)
+      .filter(Boolean)
+      .slice(0, 3)
+      .map(Number);
 
     return parts.length === 3 && parts.every((n) => !Number.isNaN(n)) ? parts : null;
   }
