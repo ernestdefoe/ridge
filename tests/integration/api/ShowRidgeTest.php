@@ -62,6 +62,10 @@ class ShowRidgeTest extends TestCase
             });
         }
 
+        // Creating the table commits implicitly on MySQL, so rows outlive the
+        // test's transaction: start each test from an empty pivot.
+        $this->database()->table('post_mentions_post')->truncate();
+
         foreach ($quotedBy as $quoted => $quoters) {
             foreach ($quoters as $quoter) {
                 $this->database()->table('post_mentions_post')->insert(['post_id' => $quoter, 'mentions_post_id' => $quoted]);
@@ -123,5 +127,20 @@ class ShowRidgeTest extends TestCase
         $this->assertEquals(round(1 / 3, 3), $peaks[9]);
         $this->assertCount(2, $peaks, 'Unquoted posts have no heat');
         $this->assertSame(4, $body['data']['attributes']['signals']['post_mentions_post']);
+    }
+
+    #[Test]
+    public function signals_on_posts_the_actor_cannot_see_or_in_other_threads_are_not_counted()
+    {
+        $this->app();
+        // Post 5 quoted twice; hidden post 14 and the other thread's post 100
+        // quoted too — neither belongs in this reader's heat.
+        $this->quotes([5 => [6, 7], 14 => [8], 100 => [9]]);
+
+        [, $body] = $this->ridge(1);
+
+        $peaks = array_column($body['data']['attributes']['peaks'], 'value', 'number');
+        $this->assertSame([5], array_keys($peaks));
+        $this->assertSame(2, $body['data']['attributes']['signals']['post_mentions_post']);
     }
 }

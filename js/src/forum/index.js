@@ -29,6 +29,13 @@ function paint(element, discussion) {
   const heat = heatFor(discussion.id());
 
   if (!heat) {
+    // The post ids are every post this reader can see, events included, so
+    // fewer of them than the minimum means fewer visible comments too — the
+    // server's answer is already known, and the request is skipped.
+    const seen = discussion.postIds?.()?.length;
+
+    if (seen && seen < (app.forum.attribute('ridgeMinPosts') || 12)) return;
+
     request(discussion.id());
 
     return;
