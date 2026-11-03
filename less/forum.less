@@ -28,8 +28,13 @@
 // order.
 .Scrubber-before,
 .Scrubber-handle,
-.Scrubber-after,
-.Scrubber-unread {
+.Scrubber-after {
   position: relative;
+  z-index: 1;
+}
+// 🚨 Core places the unread marker with `position: absolute` at the foot of
+// the track. Making it relative like its siblings pushed it a whole track's
+// height below the scrubber, so members never saw it where it belongs.
+.Scrubber-unread {
   z-index: 1;
 }
