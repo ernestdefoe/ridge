@@ -3,6 +3,7 @@ import { extend } from 'flarum/common/extend';
 
 import { heatFor, request } from './heat';
 import { gradientFor, tintFrom } from './draw';
+import { markUp } from './marks';
 
 /*
  * 🚨 The extends name a module PATH. PostStreamScrubber is code-split — it
@@ -18,6 +19,23 @@ app.initializers.add('ernestdefoe-ridge', () => {
         paint(vnode.dom, this.attrs?.stream?.discussion);
       } catch (e) {
         console.error('[ridge] leaving the scrubber alone:', e);
+      }
+
+      // 🚨 Settings are read here, not in the initializer: initializers run
+      // before app.forum exists, and reading it there threw and stopped Ridge
+      // from starting at all.
+      //
+      // A marker on <html>, not a class on the scrubber: Mithril owns the
+      // scrubber's className and would strip one added by hand on its next
+      // diff.
+      document.documentElement.toggleAttribute('data-ridge-big-number', !!app.forum.attribute('ridgeBigNumber'));
+
+      if (!app.forum.attribute('ridgePostMarks')) return;
+
+      try {
+        markUp(vnode.dom, this.attrs?.stream);
+      } catch (e) {
+        console.error('[ridge] leaving the post marks off:', e);
       }
     });
   });

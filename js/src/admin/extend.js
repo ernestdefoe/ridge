@@ -22,12 +22,25 @@ import Admin from 'flarum/common/extenders/Admin';
  * every page of the forum down, not just the admin panel.
  */
 export default [
-  new Admin().setting(() => ({
-    setting: 'ridge.min_posts',
-    type: 'number',
-    label: app.translator.trans('ernestdefoe-ridge.admin.min_posts_label'),
-    help: app.translator.trans('ernestdefoe-ridge.admin.min_posts_help'),
-    min: 2,
-    placeholder: '12',
-  })),
+  new Admin()
+    .setting(() => ({
+      setting: 'ridge.min_posts',
+      type: 'number',
+      label: app.translator.trans('ernestdefoe-ridge.admin.min_posts_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.min_posts_help'),
+      min: 2,
+      placeholder: '12',
+    }))
+    .setting(() => ({
+      setting: 'ridge.post_marks',
+      type: 'boolean',
+      label: app.translator.trans('ernestdefoe-ridge.admin.post_marks_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.post_marks_help'),
+    }))
+    .setting(() => ({
+      setting: 'ridge.big_number',
+      type: 'boolean',
+      label: app.translator.trans('ernestdefoe-ridge.admin.big_number_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.big_number_help'),
+    })),
 ];
