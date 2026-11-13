@@ -30,6 +30,17 @@ class Years
 
     private const TTL = 600;
 
+    /**
+     * The filters a cached count may carry: core's, tags' and subscriptions'.
+     *
+     * 🚨 An allow-list, because the cache key is built from the request. Any
+     * other key would let anyone fill the cache store with junk entries, one
+     * per made-up filter, so a request with one is counted fresh instead.
+     */
+    private const CACHEABLE = ['tag', 'author', 'subscription', 'created', 'hidden', 'unread'];
+
+    private const MAX_VALUE = 64;
+
     public function __construct(
         private SearchManager $search,
         private SettingsRepositoryInterface $settings,
@@ -64,8 +75,9 @@ class Years
         }
 
         // 🚨 Searches are counted fresh, never cached: every phrase would be
-        // a cache entry of its own that nobody asks for twice.
-        if ($fulltext) {
+        // a cache entry of its own that nobody asks for twice. So is anything
+        // outside the allow-list.
+        if ($fulltext || ! $this->cacheable($filters)) {
             return $this->count($actor, $filters, $column);
         }
 
@@ -82,6 +94,19 @@ class Years
         $key = 'ridge.years.'.sha1(json_encode([$generation, $actor->isGuest() ? 0 : $actor->id, $column, $filters]));
 
         return $this->cache->remember($key, self::TTL, fn () => $this->count($actor, $filters, $column));
+    }
+
+    private function cacheable(array $filters): bool
+    {
+        foreach ($filters as $key => $value) {
+            if (! in_array(ltrim((string) $key, '-'), self::CACHEABLE, true)
+                || ! is_string($value)
+                || strlen($value) > self::MAX_VALUE) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function forget(): void

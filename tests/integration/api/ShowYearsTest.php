@@ -184,6 +184,30 @@ class ShowYearsTest extends TestCase
     }
 
     #[Test]
+    public function only_known_filters_are_cached()
+    {
+        $grouped = function (array $filter): int {
+            $db = $this->database();
+            $db->flushQueryLog();
+            $db->enableQueryLog();
+            $this->years(null, $filter);
+            $total = count(array_filter($db->getQueryLog(), fn ($q) => str_contains($q['query'], 'ridge_years')));
+            $db->disableQueryLog();
+
+            return $total;
+        };
+
+        $this->assertSame(1, $grouped(['tag' => 'open']));
+        $this->assertSame(0, $grouped(['tag' => 'open']), 'A known filter is answered from the cache');
+
+        $this->assertSame(1, $grouped(['made-up' => 'junk']));
+        $this->assertSame(1, $grouped(['made-up' => 'junk']), 'An unknown filter is never cached');
+
+        $this->assertSame(1, $grouped(['tag' => str_repeat('x', 65)]));
+        $this->assertSame(1, $grouped(['tag' => str_repeat('x', 65)]), 'Nor is an oversized value');
+    }
+
+    #[Test]
     public function the_rail_is_empty_when_switched_off()
     {
         $this->setting('ridge.years', '0');
