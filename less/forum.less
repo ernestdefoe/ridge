@@ -226,8 +226,14 @@ html[data-ridge-big-number] .PostStreamScrubber .Scrubber {
     background: var(--primary-color);
     box-shadow: inset 0 0 0 2px ~"color-mix(in srgb, var(--body-bg) 55%, transparent)";
   }
+  // 🚨 Core places the label at `left: 15px; width: 100%`, which exactly
+  // fills the 15px gutter. Moving it right without narrowing it pushed it
+  // past the window under fluid layouts (Bespoke): the offset and the width
+  // come from one number so they cannot drift apart.
   .Scrubber-info {
-    left: 20px;
+    @ridge-info-left: 20px;
+    left: @ridge-info-left;
+    width: ~"calc(100% - @{ridge-info-left} + 15px)";
     margin-top: 0;
     transform: translateY(-50%);
 
