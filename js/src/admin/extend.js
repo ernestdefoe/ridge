@@ -42,5 +42,41 @@ export default [
       type: 'boolean',
       label: app.translator.trans('ernestdefoe-ridge.admin.big_number_label'),
       help: app.translator.trans('ernestdefoe-ridge.admin.big_number_help'),
+    }))
+    .setting(() => ({
+      setting: 'ridge.years',
+      type: 'boolean',
+      label: app.translator.trans('ernestdefoe-ridge.admin.years_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.years_help'),
+    }))
+    .setting(() => ({
+      setting: 'ridge.years_pages',
+      type: 'select',
+      label: app.translator.trans('ernestdefoe-ridge.admin.years_pages_label'),
+      options: {
+        both: app.translator.trans('ernestdefoe-ridge.admin.years_pages_both'),
+        index: app.translator.trans('ernestdefoe-ridge.admin.years_pages_index'),
+        tags: app.translator.trans('ernestdefoe-ridge.admin.years_pages_tags'),
+      },
+      default: 'both',
+    }))
+    .setting(() => ({
+      setting: 'ridge.years_min',
+      type: 'number',
+      label: app.translator.trans('ernestdefoe-ridge.admin.years_min_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.years_min_help'),
+      min: 1,
+      placeholder: '2',
+    }))
+    .setting(() => ({
+      setting: 'ridge.years_date',
+      type: 'select',
+      label: app.translator.trans('ernestdefoe-ridge.admin.years_date_label'),
+      help: app.translator.trans('ernestdefoe-ridge.admin.years_date_help'),
+      options: {
+        created: app.translator.trans('ernestdefoe-ridge.admin.years_date_created'),
+        activity: app.translator.trans('ernestdefoe-ridge.admin.years_date_activity'),
+      },
+      default: 'created',
     })),
 ];

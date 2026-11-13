@@ -273,3 +273,307 @@ html[data-ridge-big-number] .PostStreamScrubber .Scrubber {
     width: 24px;
   }
 }
+
+// ---------------------------------------------------------------------------
+// The year rail on the discussion list
+//
+// Same language as the scrubber: the forum's own primary colour as shading,
+// stronger where more was said. Every colour is one of Flarum's CSS
+// properties, so it follows light, dark and any theme. Link rules carry
+// `html:not(#x-hi)` because link-recolouring themes (Bespoke light) colour
+// `a:not(.Button)` at (0,3,1) and two classes lose to that.
+// ---------------------------------------------------------------------------
+@ridge-rail: 92px;
+
+.RidgeYears--empty,
+.RidgeYears-anchor {
+  height: 0;
+  margin: 0;
+}
+
+.RidgeYears-chip--none {
+  display: none !important;
+}
+
+.RidgeYears-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+html:not(#x-hi) .RidgeYears-year {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 6px;
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: var(--border-radius, 4px);
+
+  // 🚨 Hover only where there is a pointer: iOS keeps :hover on whatever
+  // was last tapped, so the year next to the picked one stayed tinted.
+  @media (hover: hover) {
+    &:hover {
+      color: var(--text-color);
+      background: var(--control-bg);
+      text-decoration: none;
+    }
+  }
+
+  &:focus-visible {
+    color: var(--text-color);
+    background: var(--control-bg);
+    text-decoration: none;
+  }
+
+  // Text colour stays the theme's own: a dark theme's primary is often too
+  // dim to read as text on its own background. The accent is the edge.
+  &.is-active {
+    color: var(--text-color);
+    background: ~"color-mix(in srgb, var(--primary-color) 14%, transparent)";
+    box-shadow: inset 3px 0 0 var(--primary-color);
+  }
+}
+
+.RidgeYears-label {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+html:not(#x-hi) .RidgeYears-count {
+  color: var(--muted-color);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.RidgeYears-bar {
+  grid-column: ~"1 / -1";
+  display: block;
+  height: 4px;
+  margin-top: 3px;
+  border-radius: 2px;
+  background: var(--control-bg);
+  overflow: hidden;
+
+  > span {
+    display: block;
+    height: 100%;
+    border-radius: 2px;
+    background: var(--primary-color);
+  }
+}
+
+// "Showing 2015 · 342 discussions — Back to latest"
+.RidgeYears-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin: 0 0 14px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 999px;
+  color: var(--text-color);
+  background: ~"color-mix(in srgb, var(--primary-color) 10%, var(--body-bg))";
+  border: 1px solid ~"color-mix(in srgb, var(--primary-color) 30%, transparent)";
+
+  strong {
+    color: var(--text-color);
+  }
+}
+
+.RidgeYears-chipText {
+  min-width: 0;
+}
+
+html:not(#x-hi) .RidgeYears-chipCount {
+  margin-inline-start: 8px;
+  color: var(--muted-color);
+  font-size: 12px;
+}
+
+html:not(#x-hi) .RidgeYears-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-inline-start: auto;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--button-primary-color, #fff);
+  background: var(--primary-color);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--button-primary-color, #fff);
+    text-decoration: none;
+    filter: brightness(1.08);
+  }
+}
+
+// The preview of a year's most active discussions, to the rail's left.
+.RidgeYears-preview {
+  position: absolute;
+  inset-inline-end: ~"calc(100% + 10px)";
+  z-index: 5;
+  width: 280px;
+  max-width: ~"calc(100vw - 140px)";
+  padding: 10px 0 6px;
+  border-radius: var(--border-radius, 6px);
+  color: var(--text-color);
+  background: var(--body-bg);
+  border: 1px solid var(--control-bg);
+  box-shadow: 0 6px 20px ~"color-mix(in srgb, var(--text-color) 18%, transparent)";
+  border-top: 2px solid var(--primary-color);
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+html:not(#x-hi) .RidgeYears-previewTitle {
+  padding: 0 14px 6px;
+  color: var(--muted-color);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+html:not(#x-hi) .RidgeYears-preview a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 14px;
+  color: var(--text-color);
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text-color);
+    background: var(--control-bg);
+    text-decoration: none;
+  }
+}
+
+.RidgeYears-previewName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html:not(#x-hi) .RidgeYears-previewCount,
+html:not(#x-hi) .RidgeYears-previewNote {
+  color: var(--muted-color);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.RidgeYears-previewNote {
+  padding: 2px 14px 6px;
+}
+
+// Tablet and up: a column of its own at the list's right edge, out of the
+// list's flow, pinned under the header while the list scrolls.
+@media @tablet-up {
+  .Page-content:has(> .RidgeYears:not(.RidgeYears--empty)) {
+    position: relative;
+    padding-inline-end: (@ridge-rail + 18px);
+  }
+
+  .RidgeYears:not(.RidgeYears--empty) {
+    position: absolute;
+    top: 0;
+    inset-inline-end: 0;
+    width: @ridge-rail;
+  }
+
+  .RidgeYears-rail {
+    position: relative;
+
+    &.is-pinned {
+      position: fixed;
+      z-index: 3;
+    }
+  }
+
+  .RidgeYears-list {
+    max-height: ~"calc(100vh - var(--header-height, 56px) - 40px)";
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  html:not(#x-hi) .RidgeYears-year {
+    padding: 5px 8px 6px;
+    font-size: 13px;
+  }
+}
+
+// Phones: a row of years at the top of the list, scrolled sideways.
+@media @phone {
+  .RidgeYears:not(.RidgeYears--empty) {
+    margin: 0 -15px 12px;
+  }
+
+  .RidgeYears-list {
+    display: flex;
+    gap: 6px;
+    padding: 2px 15px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    > li {
+      flex: 0 0 auto;
+    }
+  }
+
+  html:not(#x-hi) .RidgeYears-year {
+    min-width: 76px;
+    min-height: 44px;
+    padding: 6px 10px 7px;
+    font-size: 14px;
+    border: 1px solid var(--control-bg);
+    border-radius: 10px;
+
+    &.is-active {
+      border-color: var(--primary-color);
+      box-shadow: none;
+    }
+  }
+
+  .RidgeYears-chip {
+    flex-wrap: nowrap;
+    padding-block: 6px;
+  }
+
+  .RidgeYears-chipText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .RidgeYears-chipCount {
+    display: none;
+  }
+
+  html:not(#x-hi) .RidgeYears-back {
+    flex-shrink: 0;
+    min-height: 36px;
+  }
+
+  .RidgeYears-preview {
+    display: none;
+  }
+}

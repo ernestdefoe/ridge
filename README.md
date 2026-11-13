@@ -28,6 +28,28 @@ Every signal is optional. Ridge checks which tables exist and counts what it
 finds, so it works on a forum with none of those extensions installed — there
 is simply less to draw.
 
+## The year rail
+
+A forum with ten years of history has the same problem one thread up: nobody
+scrolls a decade. Switch on **Year rail on the discussion list** and the list
+gets a slim rail beside it, every year it holds, newest first, each with its
+number of discussions and a bar shaded by how much was said that year.
+
+- **Click a year** to see that year's discussions. The address becomes
+  `/?filter[ridgeYear]=2015`, so it can be shared, the list keeps its own sort
+  and infinite scroll inside the year, and a "Back to latest" chip returns you.
+- **Point at a year** to preview its most active discussions.
+- **On phones** the rail becomes a row of years above the list.
+- It follows whatever the list shows: a tag page, a search, the following
+  list. A member only ever counts or previews discussions they can see.
+- Settings: which pages show it, how many years before it appears (2), and
+  whether a discussion belongs to the year it **started** (default) or the year
+  it was **last active**.
+
+Filtering by an exact date range is already done well by
+[GB Date Filters](https://github.com/glowingblue/flarum-ext-date-filters); the rail is for
+browsing.
+
 ## Decisions worth knowing about
 
 - **Shading, not markers.** [Threadmarks](https://discuss.flarum.org/d/39803)
@@ -49,6 +71,12 @@ One request per discussion per page load — four aggregate counts, grouped by
 post. It is a route of its own rather than an attribute on the discussion
 resource, because hanging it there would run those counts for every row of the
 discussion list to draw nothing.
+
+The year rail is one grouped query over the same query the discussion list
+runs, cached per viewer (guests share one entry) and refreshed when a
+discussion starts, is deleted, hidden, restored, approved or re-tagged. With
+50,000 discussions that query took about 60 ms for a guest on MySQL before it
+was cached; afterwards the rail costs no queries at all.
 
 ## Installation
 

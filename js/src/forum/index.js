@@ -4,6 +4,7 @@ import { extend } from 'flarum/common/extend';
 import { heatFor, request } from './heat';
 import { gradientFor, tintFrom } from './draw';
 import { markUp } from './marks';
+import addYears from './years';
 
 /*
  * 🚨 The extends name a module PATH. PostStreamScrubber is code-split — it
@@ -13,6 +14,8 @@ import { markUp } from './marks';
  * forum bundle down.
  */
 app.initializers.add('ernestdefoe-ridge', () => {
+  addYears();
+
   ['oncreate', 'onupdate'].forEach((hook) => {
     extend('flarum/forum/components/PostStreamScrubber', hook, function (_, vnode) {
       try {

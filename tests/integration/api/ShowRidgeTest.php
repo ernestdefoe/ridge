@@ -8,7 +8,6 @@ use Flarum\Post\Post;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
-use Illuminate\Database\Schema\Blueprint;
 use PHPUnit\Framework\Attributes\Test;
 
 class ShowRidgeTest extends TestCase
@@ -19,7 +18,7 @@ class ShowRidgeTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('ernestdefoe-ridge');
+        $this->extension('flarum-mentions', 'ernestdefoe-ridge');
 
         $posts = [];
 
@@ -50,22 +49,16 @@ class ShowRidgeTest extends TestCase
         return [$response->getStatusCode(), json_decode((string) $response->getBody(), true)];
     }
 
-    /** The quote pivot belongs to flarum/mentions, which these tests don't install. */
+    /**
+     * The quote pivot belongs to flarum/mentions, enabled for the tests that
+     * quote.
+     *
+     * 🚨 Never created here by hand: CREATE TABLE (and TRUNCATE) commit
+     * implicitly on MySQL, which committed this test's fixtures too, and the
+     * leftover rows broke every test that ran after it.
+     */
     private function quotes(array $quotedBy): void
     {
-        $schema = $this->database()->getSchemaBuilder();
-
-        if (! $schema->hasTable('post_mentions_post')) {
-            $schema->create('post_mentions_post', function (Blueprint $table) {
-                $table->unsignedInteger('post_id');
-                $table->unsignedInteger('mentions_post_id');
-            });
-        }
-
-        // Creating the table commits implicitly on MySQL, so rows outlive the
-        // test's transaction: start each test from an empty pivot.
-        $this->database()->table('post_mentions_post')->truncate();
-
         foreach ($quotedBy as $quoted => $quoters) {
             foreach ($quoters as $quoter) {
                 $this->database()->table('post_mentions_post')->insert(['post_id' => $quoter, 'mentions_post_id' => $quoted]);
